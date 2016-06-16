@@ -4,12 +4,15 @@
 #include "sensor_msgs/LaserScan.h"
 #include <iostream>
 
+const float LINEAR_VEL = 2;
+const float ANGULAR_VEL = 2;
 
 geometry_msgs::Twist racecar;
 ros::Publisher chatter_pub;
 
 void chatterCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
+
   int array_size = msg->ranges.size()-1;
   float left_side = 0, right_side = 0, middle = 0;
 
@@ -23,39 +26,21 @@ void chatterCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
   }
 
   if (middle >= left_side && middle >= right_side) {
-    racecar.linear.x = 0.1;
+    racecar.linear.x = LINEAR_VEL;
     if (left_side >= right_side)
-      racecar.angular.z = -0.5;
+      racecar.angular.z = -ANGULAR_VEL/2;
     else
-      racecar.angular.z = 0.5;
+      racecar.angular.z = ANGULAR_VEL/2;
   }
   else if (left_side >= right_side) {
-    racecar.linear.x = 0.05;
-    racecar.angular.z = -1;
+    racecar.linear.x = LINEAR_VEL/2;
+    racecar.angular.z = -ANGULAR_VEL;
   }
   else {
-    racecar.linear.x = 0.05;
-    racecar.angular.z = 1;
+    racecar.linear.x = LINEAR_VEL/2;
+    racecar.angular.z = ANGULAR_VEL;
   }
 
-/*
-    racecar.linear.x = 0.02;
-    racecar.angular.z = 0;
-  }
-  else if {
-    if (msg->ranges[0] > msg->ranges[array_size]) {
-      //while (msg->ranges[0] > msg->ranges[array_size/2]) {
-        racecar.angular.z = -0.5;
-        racecar.linear.x = 0;
-      //}
-    }
-    else {
-      //while (msg->ranges[array_size] > msg->ranges[array_size/2]) {
-        racecar.angular.z = 0.5;
-        racecar.linear.x = 0;
-      //}*/
-    //}
-  //}
   chatter_pub.publish(racecar);
 }
 
@@ -80,7 +65,6 @@ int main(int argc, char **argv)
     ros::spinOnce();
     loop_rate.sleep();
   }
-
 
   return 0;
 }
