@@ -4,8 +4,8 @@
 #include "sensor_msgs/LaserScan.h"
 #include <iostream>
 
-const float LINEAR_VEL = 2;
-const float ANGULAR_VEL = 2;
+const float LINEAR_VEL = 5;
+const float ANGULAR_VEL = 5;
 
 geometry_msgs::Twist racecar;
 ros::Publisher chatter_pub;
